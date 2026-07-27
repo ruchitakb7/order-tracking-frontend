@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Package } from "lucide-react";
-import Button from "../components/ui/Button";
-import Card from "../components/ui/Card";
-import Input from "../components/ui/Input";
+import Button from "../components/ui/button";
+import Card from "../components/ui/card";
+import Input from "../components/ui/input";
 import { Login, saveFcmToken} from "../service/auth";
 import { setToken, setUser } from "../cookies";
 import { useNavigate } from "react-router-dom";
