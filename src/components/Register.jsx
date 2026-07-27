@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package } from "lucide-react";
-import Button from "../components/ui/utton";
-import Card from "../components/ui/ard";
-import Input from "../components/ui/nput";
+import Button from "../components/ui/button";
+import Card from "../components/ui/card";
+import Input from "../components/ui/input";
 import { Register } from "../service/auth";
 
 function RegisterPage() {
