@@ -3,11 +3,11 @@ import { Package } from "lucide-react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
-import { Login } from "../service/auth";
+import { Login, saveFcmToken} from "../service/auth";
 import { setToken, setUser } from "../cookies";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket"
-
+import { requestNotificationPermission } from "../firebase/firebaseMessaging";
 
 function LoginPage() {
   const [formData, setFormData] = useState({
@@ -23,7 +23,6 @@ function LoginPage() {
       [e.target.name]: e.target.value,
     });
 
-    // Remove error while typing
     setErrors({
       ...errors,
       [e.target.name]: "",
@@ -33,7 +32,7 @@ function LoginPage() {
   const validate = () => {
     const newErrors = {};
 
-    // Email
+
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (
@@ -69,14 +68,17 @@ function LoginPage() {
         setToken(response.token);
         setUser(response.user);
 
-        // console.log("Emitting join:", response.user);
-
         socket.connect();
 
-        // console.log("Connected:", socket.connected);
-        // console.log("Socket ID:", socket.id);
-
         socket.emit("join", response.user.id);
+
+        const fcmToken = await requestNotificationPermission();
+
+        if (fcmToken) {
+          await saveFcmToken(fcmToken);
+        }
+
+        console.log("FCM Token:", fcmToken);
 
         navigate("/dashboard");
       }
