@@ -7,7 +7,7 @@ import { Login, saveFcmToken} from "../service/auth";
 import { setToken, setUser } from "../cookies";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket"
-import { requestNotificationPermission } from "../firebase/firebaseMessaging";
+// import { requestNotificationPermission } from "../firebase/firebaseMessaging";
 import {  useNotification } from "./NotificationContext";
 
 function LoginPage() {
@@ -76,14 +76,6 @@ function LoginPage() {
         socket.emit("join", response.user.id);
 
         await fetchNotifications()
-
-        const fcmToken = await requestNotificationPermission();
-
-        if (fcmToken) {
-          await saveFcmToken(fcmToken);
-        }
-
-        console.log("FCM Token:", fcmToken);
 
         navigate("/dashboard");
       }

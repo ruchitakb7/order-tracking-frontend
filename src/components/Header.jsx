@@ -2,6 +2,7 @@ import { Bell, Package, LogOut, User, LayoutDashboard, } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getToken, getUser, clearAuth } from "../cookies";
 import { useNotification } from "./NotificationContext";
+import { socket } from "../socket";
 
 function Header() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ function Header() {
   const user = getUser();
 
   const handleLogout = () => {
+    socket.disconnect();
     clearNotifications()
     clearAuth();
     navigate("/");
