@@ -8,6 +8,7 @@ import { setToken, setUser } from "../cookies";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket"
 import { requestNotificationPermission } from "../firebase/firebaseMessaging";
+import {  useNotification } from "./NotificationContext";
 
 function LoginPage() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ function LoginPage() {
   });
 
   const [errors, setErrors] = useState({});
+
+  const {fetchNotifications}=useNotification()
 
   const handleChange = (e) => {
     setFormData({
@@ -71,6 +74,8 @@ function LoginPage() {
         socket.connect();
 
         socket.emit("join", response.user.id);
+
+        await fetchNotifications()
 
         const fcmToken = await requestNotificationPermission();
 

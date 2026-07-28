@@ -5,12 +5,13 @@ import { useNotification } from "./NotificationContext";
 
 function Header() {
   const navigate = useNavigate();
-  const { unreadCount } = useNotification();
+  const { unreadCount, clearNotifications } = useNotification();
 
   const token = getToken();
   const user = getUser();
 
   const handleLogout = () => {
+    clearNotifications()
     clearAuth();
     navigate("/");
   };

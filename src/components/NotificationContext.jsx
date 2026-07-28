@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { getNotifications } from "../service/notification";
-import {socket} from "../socket"
+import { socket } from "../socket"
+import { getToken } from "../cookies";
 
 const NotificationContext = createContext();
 
@@ -24,7 +25,18 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
+    // useEffect(() => {
+    //     fetchNotifications();
+    // }, []);
+ const clearNotifications = () => {
+    setNotifications([]);
+};
+
     useEffect(() => {
+        const token = getToken();
+
+        if (!token) return;
+
         fetchNotifications();
     }, []);
 
@@ -35,41 +47,31 @@ export const NotificationProvider = ({ children }) => {
     }, [notifications]);
 
 
-//     useEffect(() => {
-//     socket.on("newNotification", (notification) => {
-//         setNotifications((prev) => [notification, ...prev]);
-//     });
 
-//     return () => {
-//         socket.off("newNotification");
-//     };
-// }, []);
+    useEffect(() => {
+        console.log("NotificationContext Mounted");
 
-
-useEffect(() => {
-    console.log("NotificationContext Mounted");
-
-    return () => {
-        console.log("NotificationContext Unmounted");
-    };
-}, []);
+        return () => {
+            console.log("NotificationContext Unmounted");
+        };
+    }, []);
 
 
 
 
-useEffect(() => {
-    socket.on("newNotification", (notification) => {
-        console.log("Received notification:", notification);
+    useEffect(() => {
+        socket.on("newNotification", (notification) => {
+            console.log("Received notification:", notification);
 
-        alert(notification.message);
+            alert(notification.message);
 
-        setNotifications((prev) => [notification, ...prev]);
-    });
+            setNotifications((prev) => [notification, ...prev]);
+        });
 
-    return () => {
-        socket.off("newNotification");
-    };
-}, []);
+        return () => {
+            socket.off("newNotification");
+        };
+    }, []);
 
 
     return (
@@ -80,6 +82,7 @@ useEffect(() => {
                 unreadCount,
                 loading,
                 fetchNotifications,
+                clearNotifications,
             }}
         >
             {children}
